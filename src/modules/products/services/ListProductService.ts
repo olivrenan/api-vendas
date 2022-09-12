@@ -2,7 +2,12 @@ import { inject, injectable } from 'tsyringe';
 
 import redisCache from '@shared/cache/RedisCache';
 import { IProductsRepository } from '../domain/repositories/IProductRepository';
-import { IProduct } from '../domain/models/IProduct';
+import { IProductPaginate } from '../domain/models/IProductPaginate';
+
+interface SearchParams {
+  page: number;
+  limit: number;
+}
 
 @injectable()
 class ListProductService {
@@ -11,13 +16,23 @@ class ListProductService {
     private productsRepository: IProductsRepository,
   ) {}
 
-  public async execute(): Promise<IProduct[]> {
-    let products = await redisCache.recover<IProduct[]>(
+  public async execute({
+    page,
+    limit,
+  }: SearchParams): Promise<IProductPaginate> {
+    const take = limit;
+    const skip = (Number(page) - 1) * take;
+
+    let products = await redisCache.recover<IProductPaginate>(
       'api-vendas-PRODUCT_LIST',
     );
 
     if (!products) {
-      products = await this.productsRepository.findAll();
+      products = await this.productsRepository.findAll({
+        page,
+        skip,
+        take,
+      });
 
       await redisCache.save('api-vendas-PRODUCT_LIST', products);
     }

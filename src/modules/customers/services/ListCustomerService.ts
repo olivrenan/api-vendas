@@ -1,7 +1,12 @@
 import { injectable, inject } from 'tsyringe';
+import { ICustomerPaginate } from '../domain/models/ICustomerPaginate';
 
 import { ICustomersRepository } from '../domain/repositories/ICustomersRepository';
-import Customer from '../infra/typeorm/entities/Customer';
+
+interface SearchParams {
+  page: number;
+  limit: number;
+}
 
 @injectable()
 class ListCustomerService {
@@ -10,8 +15,18 @@ class ListCustomerService {
     private customersRepository: ICustomersRepository,
   ) {}
 
-  public async execute(): Promise<Customer[] | undefined> {
-    const customers = await this.customersRepository.findAll();
+  public async execute({
+    page,
+    limit,
+  }: SearchParams): Promise<ICustomerPaginate> {
+    const take = limit;
+    const skip = (Number(page) - 1) * take;
+
+    const customers = await this.customersRepository.findAll({
+      page,
+      skip,
+      take,
+    });
 
     return customers;
   }

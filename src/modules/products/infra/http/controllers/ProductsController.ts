@@ -9,8 +9,12 @@ import DeleteProductService from '@modules/products/services/DeleteProductServic
 
 export default class ProductsController {
   public async index(request: Request, response: Response): Promise<Response> {
+    const page = request.query.page ? Number(request.query.page) : 1;
+    const limit = request.query.limit ? Number(request.query.limit) : 15;
+
     const listProducts = container.resolve(ListProductService);
-    const products = await listProducts.execute();
+
+    const products = await listProducts.execute({ page, limit });
 
     return response.json(products);
   }

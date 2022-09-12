@@ -34,7 +34,7 @@
     "@types/node": "14.14.10",
     "@types/nodemailer": "6.4.0",
     "@types/redis": "2.8.28",
-    "@types/uuid": "^8.3.4",
+    "@types/uuid": "8.3.4",
     "@typescript-eslint/eslint-plugin": "4.9.0",
     "@typescript-eslint/parser": "4.9.0",
     "babel-plugin-module-resolver": "4.1.0",
@@ -70,8 +70,7 @@
     "redis": "4.2.0",
     "reflect-metadata": "0.1.13",
     "tsyringe": "4.7.0",
-    "typeorm": "0.2.29",
-    "typeorm-pagination": "2.0.3",
-    "uuid": "^8.0.0"
+    "typeorm": "0.3.9",
+    "uuid": "8.0.0"
   }
 }
